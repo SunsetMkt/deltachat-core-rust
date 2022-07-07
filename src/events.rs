@@ -307,6 +307,4 @@ pub enum EventType {
     WebxdcInstanceDeleted {
         msg_id: MsgId,
     },
-
-    ImexBackupReady(Vec<u8>),
 }
