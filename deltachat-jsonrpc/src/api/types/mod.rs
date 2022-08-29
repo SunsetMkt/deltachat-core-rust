@@ -97,6 +97,9 @@ pub enum QrObject {
     Login {
         address: String,
     },
+    Backup {
+        ticket: Vec<u8>,
+    },
 }
 
 impl From<Qr> for QrObject {
@@ -227,7 +230,14 @@ impl From<Qr> for QrObject {
                     authcode,
                 }
             }
+<<<<<<< HEAD
             Qr::Login { address, .. } => QrObject::Login { address },
+||||||| parent of f039a76d (apply updates)
+=======
+            Qr::Backup { ticket } => QrObject::Backup {
+                ticket: ticket.as_bytes(),
+            },
+>>>>>>> f039a76d (apply updates)
         }
     }
 }
