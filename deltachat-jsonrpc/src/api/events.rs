@@ -61,8 +61,10 @@ pub fn event_to_json_rpc_notification(event: Event) -> Value {
             status_update_serial,
         } => (json!(msg_id), json!(status_update_serial)),
         EventType::WebxdcInstanceDeleted { msg_id } => (json!(msg_id), Value::Null),
-        EventType::WebxdcBusyUpdating { msg_id } => (json!(msg_id), Value::Null),
-        EventType::WebxdcUpToDate { msg_id } => (json!(msg_id), Value::Null),
+        EventType::WebxdcUpdateStateChanged {
+            msg_id,
+            is_sending: is_send,
+        } => (json!(msg_id), json!(is_send)),
     };
 
     let id: EventTypeName = event.typ.into();
@@ -106,8 +108,7 @@ pub enum EventTypeName {
     SelfavatarChanged,
     WebxdcStatusUpdate,
     WebxdcInstanceDeleted,
-    WebxdcBusyUpdating,
-    WebxdcUpToDate,
+    WebxdcUpdateStateChanged,
 }
 
 impl From<EventType> for EventTypeName {
@@ -144,8 +145,7 @@ impl From<EventType> for EventTypeName {
             EventType::SelfavatarChanged => SelfavatarChanged,
             EventType::WebxdcStatusUpdate { .. } => WebxdcStatusUpdate,
             EventType::WebxdcInstanceDeleted { .. } => WebxdcInstanceDeleted,
-            EventType::WebxdcBusyUpdating { .. } => WebxdcBusyUpdating,
-            EventType::WebxdcUpToDate { .. } => WebxdcUpToDate,
+            EventType::WebxdcUpdateStateChanged { .. } => WebxdcUpdateStateChanged,
         }
     }
 }
