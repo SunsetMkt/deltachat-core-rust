@@ -103,7 +103,7 @@ pub mod receive_imf;
 pub mod tools;
 
 pub mod accounts;
-
+mod utils;
 /// if set imap/incoming and smtp/outgoing MIME messages will be printed
 pub const DCC_MIME_DEBUG: &str = "DCC_MIME_DEBUG";
 
