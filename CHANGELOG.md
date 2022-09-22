@@ -12,7 +12,7 @@
 - enable `bcc_self` by default #3612
 
 ### Fixes
-
+- Strip all BIDI embedding controls in group names, system messages and file names #3479
 
 ## 1.94.0
 
