@@ -6,6 +6,10 @@
 
 ### Changes
 - add `configured_inbox_folder` to account info #3748
+- add JSON-RPC stdio server `deltachat-rpc-server` and use it for JSON-RPC tests #3695
+- If an email has multiple From addresses, handle this as if there was
+  no From address, to prevent from forgery attacks. #3667
+
 
 ### Fixes
 
