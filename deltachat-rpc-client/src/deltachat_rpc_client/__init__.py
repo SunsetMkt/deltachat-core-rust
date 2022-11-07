@@ -85,7 +85,10 @@ async def main():
         account_id = account_ids[0]
 
     async def event_loop():
-        while notification := await deltachat.get_next_event():
+        while True:
+            notification = await deltachat.get_next_event()
+            if not notification:
+                break
             account_id = notification["contextId"]
             event = notification["event"]
             if event["type"] == "Info":
