@@ -88,20 +88,19 @@ async def main():
         while notification := await deltachat.get_next_event():
             account_id = notification["contextId"]
             event = notification["event"]
-            match event["type"]:
-                case "Info":
-                    logging.info(event["msg"])
-                case "IncomingMsg":
-                    await deltachat.accept_chat(account_id, event["chatId"])
-                    message = await deltachat.message_get_message(
-                        account_id, event["msgId"]
-                    )
-                    await deltachat.markseen_msgs(account_id, [event["msgId"]])
-                    await deltachat.misc_send_text_message(
-                        account_id, message["text"], event["chatId"]
-                    )
-                case other:
-                    print("Unknown event:", event)
+            if event["type"] == "Info":
+                logging.info(event["msg"])
+            elif event["type"] == "IncomingMsg":
+                await deltachat.accept_chat(account_id, event["chatId"])
+                message = await deltachat.message_get_message(
+                    account_id, event["msgId"]
+                )
+                await deltachat.markseen_msgs(account_id, [event["msgId"]])
+                await deltachat.misc_send_text_message(
+                    account_id, message["text"], event["chatId"]
+                )
+            else other:
+                print("Unknown event:", event)
             deltachat.event_queue.task_done()
 
     event_loop_task = asyncio.create_task(event_loop())
