@@ -99,7 +99,7 @@ async def main():
                 await deltachat.misc_send_text_message(
                     account_id, message["text"], event["chatId"]
                 )
-            else other:
+            else:
                 print("Unknown event:", event)
             deltachat.event_queue.task_done()
 
