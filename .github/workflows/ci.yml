@@ -158,8 +158,6 @@ jobs:
       if: ${{ matrix.python }}
       env:
         DCC_NEW_TMP_EMAIL: ${{ secrets.DCC_NEW_TMP_EMAIL }}
-        DCC_RS_TARGET: debug
-        DCC_RS_DEV: ${{ github.workspace }}
       working-directory: deltachat-rpc-client
       run: tox -e py3
 
