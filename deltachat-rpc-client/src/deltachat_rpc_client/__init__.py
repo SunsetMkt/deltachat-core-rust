@@ -76,11 +76,13 @@ async def start_rpc_server():
     deltachat = Deltachat(proc)
     return deltachat
 
+
 async def new_online_account():
     url = os.getenv("DCC_NEW_TMP_EMAIL")
     async with aiohttp.ClientSession() as session:
         async with session.post(url) as response:
             return json.loads(await response.text())
+
 
 async def main():
     deltachat = start_rpc_server()
