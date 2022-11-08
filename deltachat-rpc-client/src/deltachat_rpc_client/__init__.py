@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import asyncio
+import aiohttp
 import json
 import logging
+import os
 
 
 class JsonRpcError(Exception):
@@ -28,7 +30,7 @@ class Deltachat:
             else:
                 if response["method"] == "event":
                     # An event notification.
-                    await self.event_queue.put(response["params"])
+                    await self.event_queue.put(response["params"]["event"])
 
     async def get_next_event(self):
         """Returns next event."""
@@ -73,6 +75,12 @@ async def start_rpc_server():
     )
     deltachat = Deltachat(proc)
     return deltachat
+
+async def new_online_account():
+    url = os.getenv("DCC_NEW_TMP_EMAIL")
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url) as response:
+            return json.loads(await response.text())
 
 async def main():
     deltachat = start_rpc_server()
