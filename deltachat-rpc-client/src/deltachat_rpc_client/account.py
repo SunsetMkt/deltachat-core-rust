@@ -16,16 +16,16 @@ class Account:
         await self.rpc.stop_io(self.id)
 
     async def get_info(self):
-        await self.rpc.get_info(self.id)
+        return await self.rpc.get_info(self.id)
 
     async def get_file_size(self):
-        await self.rpc.get_account_file_size(self.id)
+        return await self.rpc.get_account_file_size(self.id)
 
     async def is_configured(self) -> bool:
-        await self.rpc.is_configured(self.id)
+        return await self.rpc.is_configured(self.id)
 
     async def set_config(key: str, value: Optional[str]):
         await self.rpc.set_config(self.id, key, value)
 
     async def get_config(key: str) -> Optional[str]:
-        await self.rpc.get_config(self.id, key)
+        return await self.rpc.get_config(self.id, key)

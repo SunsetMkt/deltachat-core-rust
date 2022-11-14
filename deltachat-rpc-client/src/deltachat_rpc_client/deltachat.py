@@ -16,7 +16,7 @@ class Deltachat:
 
     async def get_all_accounts(self):
         account_ids = await self.rpc.get_all_account_ids()
-        return [Account(rpc, account_id) for account_id in account_ids]
+        return [Account(self.rpc, account_id) for account_id in account_ids]
 
     async def start_io(self) -> None:
         await self.rpc.start_io_for_all_accounts()
