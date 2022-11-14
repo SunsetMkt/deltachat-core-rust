@@ -1,4 +1,6 @@
-from .deltachat import Deltachat, start_rpc_server, new_online_account
+from .rpc import Rpc, start_rpc_server, new_online_account
+from .deltachat import Deltachat
+from .account import Account
 
 
 async def main():
