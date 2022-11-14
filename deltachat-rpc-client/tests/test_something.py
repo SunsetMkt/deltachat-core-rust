@@ -54,7 +54,7 @@ async def test_online_account(rpc):
 
 
 @pytest.mark.asyncio
-async def test_online_account(rpc):
+async def test_object_account(rpc):
     deltachat = Deltachat(rpc)
     account = await deltachat.add_account()
     assert not await account.is_configured()
