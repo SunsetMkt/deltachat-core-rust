@@ -1,8 +1,9 @@
 import asyncio
-import aiohttp
 import json
 import logging
 import os
+
+import aiohttp
 
 
 class JsonRpcError(Exception):
@@ -66,11 +67,13 @@ class Rpc:
         return method
 
 
-async def start_rpc_server():
+async def start_rpc_server(*args, **kwargs):
     proc = await asyncio.create_subprocess_exec(
         "deltachat-rpc-server",
         stdin=asyncio.subprocess.PIPE,
         stdout=asyncio.subprocess.PIPE,
+        *args,
+        **kwargs
     )
     rpc = Rpc(proc)
     return rpc

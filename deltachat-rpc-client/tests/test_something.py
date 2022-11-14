@@ -1,3 +1,5 @@
+import os
+
 import pytest
 import pytest_asyncio
 
@@ -6,8 +8,10 @@ from deltachat_rpc_client import Deltachat
 
 
 @pytest_asyncio.fixture
-async def rpc():
-    return await deltachat_rpc_client.start_rpc_server()
+async def rpc(tmp_path):
+    return await deltachat_rpc_client.start_rpc_server(
+        env={**os.environ, "DC_ACCOUNTS_PATH": str(tmp_path / "accounts")}
+    )
 
 
 @pytest.mark.asyncio
@@ -29,6 +33,7 @@ async def test_email_address_validity(rpc):
         assert await rpc.check_email_validity(addr)
     for addr in invalid_addresses:
         assert not await rpc.check_email_validity(addr)
+
 
 @pytest.mark.asyncio
 async def test_online_account(rpc):
