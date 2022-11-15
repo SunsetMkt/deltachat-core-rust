@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 import pytest
@@ -45,7 +46,7 @@ async def test_online_account(rpc):
 
     await rpc.configure(account_id)
     while True:
-        event = await rpc.get_next_event()
+        event = (await rpc.get_next_event())["event"]
         if event["type"] == "ConfigureProgress":
             # Progress 0 indicates error.
             assert event["progress"] != 0
@@ -61,7 +62,36 @@ async def test_online_account(rpc):
 @pytest.mark.asyncio
 async def test_object_account(rpc):
     deltachat = Deltachat(rpc)
-    account = await deltachat.add_account()
-    assert not await account.is_configured()
-    info = await account.get_info()
-    print(info)
+
+    async def create_configured_account():
+        account = await deltachat.add_account()
+        assert not await account.is_configured()
+        account_json = await deltachat_rpc_client.new_online_account()
+        await account.set_config("addr", account_json["email"])
+        await account.set_config("mail_pw", account_json["password"])
+        await account.configure()
+        assert await account.is_configured()
+        return account
+
+    alice_task = asyncio.create_task(create_configured_account())
+    bob_task = asyncio.create_task(create_configured_account())
+
+    alice = await alice_task
+    bob = await bob_task
+
+    alice_contact_bob = await alice.create_contact(await bob.get_config("addr"), "Bob")
+    alice_chat_bob = await alice_contact_bob.create_chat()
+    await alice_chat_bob.send_text("Hello!")
+
+    while True:
+        event = await rpc.get_next_event()
+        if event["contextId"] != bob.account_id:
+            continue
+        event = event["event"]
+        if event["type"] == "IncomingMsg":
+            chat_id = event["chatId"]
+            msg_id = event["msgId"]
+            break
+
+    message = await rpc.get_message(bob.account_id, msg_id)
+    assert message["text"] == "Hello!"

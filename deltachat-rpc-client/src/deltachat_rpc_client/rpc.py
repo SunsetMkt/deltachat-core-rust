@@ -27,10 +27,11 @@ class Rpc:
             if "id" in response:
                 fut = self.request_events.pop(response["id"])
                 fut.set_result(response)
+            elif response["method"] == "event":
+                # An event notification.
+                await self.event_queue.put(response["params"])
             else:
-                if response["method"] == "event":
-                    # An event notification.
-                    await self.event_queue.put(response["params"]["event"])
+                print(response)
 
     async def get_next_event(self):
         """Returns next event."""
