@@ -13,7 +13,7 @@ class JsonRpcError(Exception):
 class Rpc:
     def __init__(self, process):
         self.process = process
-        self.event_queue = asyncio.Queue()
+        self.event_queues = {}
         self.id = 0
         self.reader_task = asyncio.create_task(self.reader_loop())
 
@@ -29,13 +29,18 @@ class Rpc:
                 fut.set_result(response)
             elif response["method"] == "event":
                 # An event notification.
-                await self.event_queue.put(response["params"])
+                params = response["params"]
+                account_id = params["contextId"]
+                if account_id not in self.event_queues:
+                    self.event_queues[account_id] = asyncio.Queue()
+                await self.event_queues[account_id].put(params["event"])
             else:
                 print(response)
 
-    async def get_next_event(self):
+    async def get_next_event(self, account_id):
         """Returns next event."""
-        return await self.event_queue.get()
+        if account_id in self.event_queues:
+            return await self.event_queues[account_id].get()
 
     def __getattr__(self, attr):
         async def method(*args, **kwargs):

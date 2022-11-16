@@ -46,7 +46,7 @@ async def test_online_account(rpc):
 
     await rpc.configure(account_id)
     while True:
-        event = (await rpc.get_next_event())["event"]
+        event = await rpc.get_next_event(account_id)
         if event["type"] == "ConfigureProgress":
             # Progress 0 indicates error.
             assert event["progress"] != 0
@@ -82,10 +82,7 @@ async def test_object_account(rpc):
     await alice_chat_bob.send_text("Hello!")
 
     while True:
-        event = await rpc.get_next_event()
-        if event["contextId"] != bob.account_id:
-            continue
-        event = event["event"]
+        event = await bob.get_next_event()
         if event["type"] == "IncomingMsg":
             chat_id = event["chatId"]
             msg_id = event["msgId"]
