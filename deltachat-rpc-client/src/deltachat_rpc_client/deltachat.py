@@ -23,3 +23,6 @@ class Deltachat:
 
     async def stop_io(self) -> None:
         await self.rpc.stop_io_for_all_accounts()
+
+    async def maybe_network(self) -> None:
+        await self.rpc.maybe_network()
