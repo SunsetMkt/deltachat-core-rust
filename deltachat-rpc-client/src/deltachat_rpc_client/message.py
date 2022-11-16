@@ -4,6 +4,6 @@ class Message:
         self.account_id = account_id
         self.msg_id = msg_id
 
-    async def send_reaction(self, reactions: list[str]) -> Message:
+    async def send_reaction(self, reactions: list[str]):
         msg_id = await self.rpc.send_reaction(self.account_id, self.msg_id, reactions)
         return Message(self.rpc, self.account_id, msg_id)

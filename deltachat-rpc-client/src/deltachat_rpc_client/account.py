@@ -8,6 +8,9 @@ class Account:
         self.rpc = rpc
         self.account_id = account_id
 
+    def __repr__(self):
+        return "<Account id={}>".format(self.account_id)
+
     async def get_next_event(self):
         return await self.rpc.get_next_event(self.account_id)
 

@@ -26,3 +26,6 @@ class Deltachat:
 
     async def maybe_network(self) -> None:
         await self.rpc.maybe_network()
+
+    async def get_system_info(self):
+        return await self.rpc.get_system_info()
