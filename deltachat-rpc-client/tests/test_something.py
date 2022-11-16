@@ -73,11 +73,9 @@ async def test_object_account(rpc):
         assert await account.is_configured()
         return account
 
-    alice_task = asyncio.create_task(create_configured_account())
-    bob_task = asyncio.create_task(create_configured_account())
-
-    alice = await alice_task
-    bob = await bob_task
+    alice, bob = await asyncio.gather(
+        create_configured_account(), create_configured_account()
+    )
 
     alice_contact_bob = await alice.create_contact(await bob.get_config("addr"), "Bob")
     alice_chat_bob = await alice_contact_bob.create_chat()
